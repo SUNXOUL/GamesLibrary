@@ -1,6 +1,5 @@
 package com.sagrd.GamesLibrary.ui.game
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sagrd.GamesLibrary.data.GameDB
 import com.sagrd.GamesLibrary.domain.model.Category
-import com.sagrd.GamesLibrary.domain.model.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,14 +17,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+class CategoryViewModel @Inject constructor(
     private val gamedb: GameDB
 ) : ViewModel() {
-    var name : String by mutableStateOf("")
-    var categoryid : Int by mutableStateOf (0)
-    var image by mutableStateOf<Uri?> (null)
-
-
+    var name by mutableStateOf ("")
 
     private val _isMessageShown = MutableSharedFlow<Boolean>()
     val isMessageShownFlow = _isMessageShown.asSharedFlow()
@@ -37,7 +31,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    val games: StateFlow<List<Game>> = gamedb.gameDao().getAll()
+    val categories: StateFlow<List<Category>> = gamedb.categoryDao().getAll()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -45,31 +39,26 @@ class GameViewModel @Inject constructor(
         )
 
 
-    fun SaveGame() {
+    fun Save() {
         viewModelScope.launch {
-            val game: Game = Game(
-                name = name,
-                categoryid = categoryid,
-                image = image.toString(),
+            val category: Category = Category(
+                name = name
             )
-            gamedb.gameDao().save(game)
+            gamedb.categoryDao().save(category)
             limpiar()
         }
     }
     fun DeleteFactura() {
         viewModelScope.launch {
-            val game: Game = Game(
+            val category: Category = Category(
                 name = name,
-                categoryid = categoryid,
-                image = image.toString(),
             )
-            gamedb.gameDao().delete(game)
+            gamedb.categoryDao().delete(category)
             limpiar()
         }
     }
 
     private fun limpiar() {
         name = ""
-        categoryid = 0
     }
 }

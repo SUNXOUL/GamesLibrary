@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(category: Game)
+    suspend fun save(category: Category)
 
     @Query(
         """
@@ -25,7 +25,7 @@ interface CategoryDao {
     suspend fun find(id: Int): Category
 
     @Delete
-    suspend fun delete(category: Game)
+    suspend fun delete(category: Category)
 
     @Query("SELECT * FROM Categories")
     fun getAll(): Flow<List<Category>>

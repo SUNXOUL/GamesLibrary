@@ -5,13 +5,14 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.sagrd.GamesLibrary.domain.model.Category
 import com.sagrd.GamesLibrary.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(game: Game)
+    suspend fun save(game: com.sagrd.GamesLibrary.domain.model.Game)
 
     @Query(
         """
@@ -24,7 +25,7 @@ interface GameDao {
     suspend fun find(id: Int): Game
 
     @Delete
-    suspend fun delete(game: Game)
+    suspend fun delete(game: com.sagrd.GamesLibrary.domain.model.Game)
 
     @Query("SELECT * FROM Games")
     fun getAll(): Flow<List<Game>>
